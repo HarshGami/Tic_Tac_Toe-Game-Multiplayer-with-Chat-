@@ -23,13 +23,19 @@ app.post("/signup", async (req, res) => {
     if (name === "" || username === "" || password === "")
       return res.json({ message: "Please enter details" });
 
-    const message = "";
-    const userId = uuidv4();
-    const salt = bcrypt.genSaltSync(10);
-    const hashedpassword = bcrypt.hashSync(password, salt);
-    const token = serverclient.createToken(userId);
+    const { users } = await serverclient.queryUsers({ name: username });
 
-    res.json({ token, userId, name, username, hashedpassword, message });
+    if (users.length === 0) {
+      const message = "";
+      const userId = uuidv4();
+      const salt = bcrypt.genSaltSync(10);
+      const hashedpassword = bcrypt.hashSync(password, salt);
+      const token = serverclient.createToken(userId);
+
+      res.json({ token, userId, name, username, hashedpassword, message });
+    } else {
+      res.json({ message: "Username is not available." });
+    }
   } catch (e) {
     res.json(e);
   }
@@ -40,7 +46,7 @@ app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     const { users } = await serverclient.queryUsers({ name: username });
     const message = "";
-
+    
     if (password === "" || username === "")
       return res.json({ message: "Please enter details" });
     if (users.length === 0) return res.json({ message: "User not found" });
@@ -50,7 +56,7 @@ app.post("/login", async (req, res) => {
       password,
       users[0].hashedpassword
     );
-    
+
     if (passwordmatched) {
       res.json({
         token,
@@ -60,18 +66,18 @@ app.post("/login", async (req, res) => {
         message,
       });
     } else {
-      res.json({ message: "credential Not Matches" });
+      res.json({ message: "Credential not matches" });
     }
   } catch (e) {
     res.json(e);
   }
 });
 
-app.get('*',(req,res)=>{
-  res.status(200).json({
-    message:'bad request'
-  })
-})
+app.get("*", (req, res) => {
+  res.json({
+    message: "bad request",
+  });
+});
 
 app.listen(process.env.PORT, () => {
   console.log("app is runing on port 5000");
