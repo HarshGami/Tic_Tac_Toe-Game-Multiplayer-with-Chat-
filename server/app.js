@@ -23,7 +23,7 @@ app.post("/signup", async (req, res) => {
     if (name === "" || username === "" || password === "")
       return res.json({ message: "Please enter details" });
 
-    const { users } = await serverclient.queryUsers({ name: username });
+    const { users } = await serverclient.queryUsers({ username: username });
 
     if (users.length === 0) {
       const message = "";
@@ -44,7 +44,7 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const { users } = await serverclient.queryUsers({ name: username });
+    const { users } = await serverclient.queryUsers({ username: username });
     const message = "";
     
     if (password === "" || username === "")
