@@ -18,7 +18,7 @@ function JoinGame() {
       return;
     }
 
-    const response = await client.queryUsers({ name: { $eq: rivalUsername } });
+    const response = await client.queryUsers({ username: { $eq: rivalUsername } });
 
     if (response.users.length === 0) {
       alert("user not found");
