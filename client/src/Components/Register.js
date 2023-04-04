@@ -62,7 +62,7 @@ function Register({ setIsAuth }) {
   }
 
   return (
-    <div className="my-4 card w-50 mx-auto">
+    <div className="my-4 card w-75 mx-auto">
       <Form className="d-flex justify-content-center">
         <Button
           className="w-50"
